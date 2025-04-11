@@ -5,8 +5,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.cluster import KMeans
 
 # Load CO2 emissions dataset
-df = pd.read_csv('Data/data.csv')  
-df_gdp = pd.read_csv('Data/gdp_data.csv', skiprows=4)  # Skip metadata rows
+df = pd.read_csv('data.csv')  # Replace with actual file path
+df_gdp = pd.read_csv('gdp_data.csv', skiprows=4)  # Skip metadata rows
 
 # Display basic info
 print(df.head())
@@ -67,3 +67,34 @@ kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
 kmeans.fit(X_cluster)
 X_cluster['Cluster'] = kmeans.labels_
 print(X_cluster.sort_values('Cluster'))
+
+# --- Data Visualization Section ---
+
+# Bar Chart: Top CO2 Emitters Per Capita
+plt.figure(figsize=(10, 6))
+sns.barplot(x=top_emitters.values, y=top_emitters.index, palette='Reds_r')
+plt.title('Top 10 CO2 Emitters Per Capita')
+plt.xlabel('Metric Tons Per Capita')
+plt.ylabel('Country')
+plt.tight_layout()
+plt.show()
+
+# Bar Chart: Bottom CO2 Emitters Per Capita
+plt.figure(figsize=(10, 6))
+sns.barplot(x=bottom_emitters.values, y=bottom_emitters.index, palette='Blues')
+plt.title('Bottom 10 CO2 Emitters Per Capita')
+plt.xlabel('Metric Tons Per Capita')
+plt.ylabel('Country')
+plt.tight_layout()
+plt.show()
+
+# Heatmap: Correlation Between Emissions, GDP and Per Capita Emissions
+correlation_df = merged_df[['Kilotons of Co2', 'Metric Tons Per Capita', 'GDP']].dropna()
+corr = correlation_df.corr()
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr, annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Correlation Heatmap: CO2, GDP, and Per Capita Emissions')
+plt.tight_layout()
+plt.show()
+
